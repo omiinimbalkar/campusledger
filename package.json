@@ -1,0 +1,8 @@
+{
+  "name": "student-academic-activity-ledger",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DBMS mini-project using vanilla JavaScript, Express and SQLite",
+  "scripts": { "start": "node server.js", "dev": "node --watch server.js", "test": "node --test" },
+  "dependencies": { "better-sqlite3": "^11.8.1", "dotenv": "^16.4.7", "express": "^4.21.2", "googleapis": "^146.0.0" }
+}

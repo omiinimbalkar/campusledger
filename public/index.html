@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f4"><title>Campus Ledger — Student Records</title>
+  <link rel="stylesheet" href="/styles.css?v=college-1">
+</head>
+<body>
+  <section id="login-screen" class="login-screen" aria-labelledby="login-title">
+    <form id="login-form" class="login-card">
+      <div class="brand-icon login-brand">C</div><p class="eyebrow">CAMPUS LEDGER</p><h1 id="login-title">Sign in</h1>
+      <p class="login-intro">Use a demo account to open the student ledger.</p>
+      <label class="login-field">Username<input name="username" autocomplete="username" required></label>
+      <label class="login-field">Password<input name="password" type="password" autocomplete="current-password" required></label>
+      <p id="login-error" class="login-error" hidden></p>
+      <button class="primary-button login-submit" type="submit">Sign in</button>
+      <div class="demo-credentials"><b>Demo access</b><br>Admin: <code>admin / admin123</code><br>Student: <code>student / student123</code></div>
+    </form>
+  </section>
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="Campus Ledger dashboard"><span class="brand-icon">C</span><span>campus<span class="light">ledger</span><small>STUDENT RECORDS</small></span></a>
+    <p class="side-label">WORKSPACE</p>
+    <button class="side-link active" data-view="dashboard"><span>▦</span> Dashboard</button>
+    <button class="side-link" data-view="academics"><span>▤</span> Academics</button>
+    <button class="side-link" data-view="seminars"><span>◉</span> Seminars</button>
+    <button class="side-link" data-view="activities"><span>✳</span> Activities</button>
+    <button class="side-link" id="sync-button"><span>↥</span> Google Sheets <i class="online-dot"></i></button>
+    <div class="sidebar-bottom"><div class="sidebar-note"><b>Student records, in one place.</b><p>Academic progress and campus life, connected.</p></div><div class="user-chip"><span class="user-avatar" id="account-avatar">AD</span><span><b id="account-name">Administrator</b><small id="account-role">Admin demo</small></span></div><button id="logout-button" class="logout-button">Sign out</button></div>
+  </aside>
+  <main class="main-area">
+    <header class="topbar"><div class="crumb">Workspace <span>›</span> <b id="crumb-title">Dashboard</b></div><div class="top-actions"><span class="year-label">ACADEMIC YEAR <b>2024–25</b></span><span id="role-indicator" class="role-indicator"></span><button class="mobile-add" id="add-student-top">＋ Add student</button><button id="mobile-logout" class="mobile-logout">Sign out</button></div></header>
+    <div class="page">
+      <section class="welcome"><div><div class="eyebrow">STUDENT ACADEMIC & ACTIVITY LEDGER</div><h1>Student records, at a glance.</h1><p>Track academic progress, seminars and campus activities.</p></div><button class="primary-button" id="add-student">＋ Add student</button></section>
+      <div id="toast" class="toast" hidden></div>
+      <section class="stats">
+        <article class="stat"><span class="stat-icon purple">♙</span><span class="stat-name">Total students</span><b id="stat-students">—</b><small>All programs</small></article>
+        <article class="stat"><span class="stat-icon green">⌁</span><span class="stat-name">Average CGPA</span><b id="stat-cgpa">—</b><small>Out of 10</small></article>
+        <article class="stat"><span class="stat-icon amber">✳</span><span class="stat-name">Activities logged</span><b id="stat-activities">—</b><small>Participation records</small></article>
+        <article class="stat"><span class="stat-icon blue">◉</span><span class="stat-name">Seminars attended</span><b id="stat-seminars">—</b><small>Internal & external</small></article>
+      </section>
+      <section class="workspace-grid">
+        <section class="card roster"><div class="card-heading"><div><h2>Students</h2><p>Search and select a student profile</p></div><button class="link-button" id="add-student-inline">＋ Add new</button></div>
+          <label class="search"><span>⌕</span><input id="search" type="search" placeholder="Search name or roll number…"><kbd>⌘ K</kbd></label>
+          <div id="student-list" class="student-list"><div class="loading">Loading records…</div></div>
+          <div class="roster-footer"><span id="roster-count">0 students</span><button id="clear-search">Clear search</button></div>
+        </section>
+        <section class="card profile-card" id="profile-card"><div class="empty-profile"><div class="empty-mark">◎</div><h2>Select a student</h2><p>Choose a student from the list to view their academic ledger.</p></div></section>
+      </section>
+      <footer><span>◫ &nbsp; Student Academic & Activity Ledger</span><span>Database-backed demo <b>·</b> <a href="/report.html">User report</a> <b>·</b> Setup in README.md</span></footer>
+    </div>
+  </main>
+  <dialog id="dialog"><div class="dialog-head"><div><small>STUDENT LEDGER</small><h2 id="dialog-title">Add record</h2></div><button class="close-button" id="close-dialog" aria-label="Close">×</button></div><form id="dialog-form"><div id="dialog-fields" class="form-grid"></div><div id="form-error" class="form-error" hidden></div><div class="dialog-actions"><button type="button" class="secondary-button" id="cancel-dialog">Cancel</button><button type="submit" class="primary-button">Save record</button></div></form></dialog>
+  <script src="/app.js?v=button-audit-1" defer></script>
+</body></html>

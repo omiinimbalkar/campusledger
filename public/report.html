@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Student Ledger — User &amp; Technical Report</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main style="max-width:800px;margin:45px auto;padding:24px">
+  <a href="/">← Return to dashboard</a>
+  <h1>Student Academic &amp; Activity Ledger</h1>
+  <p>This project records student profiles, prior education, gap years, semester results and campus portfolios. The browser interface uses an Express API backed by a local SQLite database. Google Sheets is an optional one-way export.</p>
+
+  <h2>Start and operate the app</h2>
+  <ol>
+    <li>Install Node.js 18 or newer.</li>
+    <li>In the project folder run <code>npm install</code>, then <code>npm start</code>.</li>
+    <li>Open <code>http://localhost:3000</code>. The first launch creates the local database and sample records.</li>
+    <li>Search by student name or roll number, select a student, and use the profile tabs to view academic progress, seminars and activities.</li>
+    <li>Use Add/Edit controls to maintain student profiles, education, semester subjects and marks, gap years, seminars and activities. Use Delete for records you intend to remove.</li>
+  </ol>
+  <p><strong>Demo logins:</strong> Admin <code>admin / admin123</code> can search and manage the full roster. Student <code>student / student123</code> can view the read-only profile linked to roll number <code>CS-2022-014</code>. Both can see education, grades, gap years, seminars and activities for the permitted profile. Sign out to switch roles. These fixed demo credentials are for classroom demonstration only.</p>
+  <p>The dashboard chart plots SGPA and CGPA by semester and marks gap years. Seminar records are categorized Internal or External. Activities are categorized Technical, Co-curricular or Extracurricular.</p>
+
+  <h2>Database model and constraints</h2>
+  <p><code>schema.sql</code> defines separate related tables for students, advisors, education, gap years, semesters, subjects, seminars and activities. Primary and foreign keys prevent orphaned records. Student dependents and semester subjects cascade on deletion; deleting an advisor sets the optional student reference to NULL. Unique constraints prevent duplicate roll numbers/emails, student education levels, semester numbers, subject codes within a semester, and repeated event keys.</p>
+  <p>CHECK constraints restrict statuses, categories and participation values; constrain years and credits; keep education and subject marks between zero and their configured maximum; and keep SGPA/CGPA between zero and ten. Theory, internal, external, practical and lab marks and maximums are stored on subject rows. Semester and its subjects are inserted as a transaction. SGPA is entered with the semester; CGPA is calculated from the prior CGPA and new SGPA, rather than derived from marks.</p>
+  <p>The Express API checks values and returns readable client errors before writes. SQLite constraints provide a final integrity check. Duplicate or invalid values are rejected; a failed semester/subject transaction does not leave partial semester data. Student deletion cascades to dependent records.</p>
+
+  <h2>Google Sheets setup and synchronization</h2>
+  <ol>
+    <li>Create a Google Cloud service account, enable the Google Sheets API, and create a spreadsheet with a worksheet named <strong>Ledger</strong>.</li>
+    <li>Share the spreadsheet with the service-account email as an editor.</li>
+    <li>Copy <code>.env.example</code> to <code>.env</code> and set <code>GOOGLE_SHEETS_ID</code>, <code>GOOGLE_SERVICE_ACCOUNT_EMAIL</code> and <code>GOOGLE_PRIVATE_KEY</code>. Keep escaped newlines in the key as <code>\n</code>.</li>
+    <li>Restart the server. Successful writes through the GUI/API start a one-way snapshot export. The Google Sheets button requests an immediate sync and can retry after a failure.</li>
+  </ol>
+  <p>Spreadsheet edits are not imported. Sync replaces the contents of the Ledger tab with a current snapshot, so put manual notes on another tab. If Sheets is unavailable, SQLite remains saved and the GUI can retry.</p>
+
+  <h2>Direct database updates</h2>
+  <p>For direct SQL maintenance, stop the server, back up the database file (default <code>data/ledger.db</code>), and edit it with a SQLite client using the schema in <code>schema.sql</code>. Enable foreign keys in that SQL session with <code>PRAGMA foreign_keys = ON</code> and preserve all constraints. Restart the app after editing. Direct SQL bypasses API validation and does not trigger automatic Sheets sync; click the Sheets button to export those edits. Prefer the GUI/API for normal data entry.</p>
+
+  <h2>What to do next</h2>
+  <ol>
+    <li>Sign in as Admin and add or update sample records.</li>
+    <li>Sign out and sign in as Student. Confirm the student sees their own profile and cannot edit or access another student's record.</li>
+    <li>If Sheets is configured, sign in as Admin, press the sync button and check the Ledger worksheet.</li>
+    <li>For a real deployment, replace demo credentials with managed accounts, securely hashed passwords, HTTPS and a stable secret. Decide how direct SQL writes should trigger synchronization.</li>
+  </ol>
+
+  <h2>Coverage note</h2>
+  <p>The app provides the database model, search, progression chart, gap markers, portfolio filters, detailed marks and optional Sheets export. The current implementation uses SQLite. Sheets credentials are optional, direct SQL changes require a manual export, and two-way synchronization is not implemented. Therefore, the guideline requiring mandatory automatic sync for every direct database change is not fully met.</p>
+  <p>For setup variables and API details, see the project-root files <code>README.md</code> and <code>schema.sql</code>.</p>
+</main>
+</body>
+</html>
