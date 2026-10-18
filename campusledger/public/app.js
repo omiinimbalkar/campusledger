@@ -1,6 +1,10 @@
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const defaultSubject=()=>({credits:'3',theory_max:'100',internal_max:'30',external_max:'70',practical_max:'100',lab_max:'100'});
 const state={students:[],student:null,tab:'Overview',seminarType:'Internal',activityType:'Technical',query:'',subjectRows:[defaultSubject()],user:null};
+const getStoredTheme=()=>localStorage.getItem('campus-ledger-theme')||'light';
+function applyTheme(theme){document.body.classList.toggle('theme-dark',theme==='dark');const toggle=$('#theme-toggle');if(!toggle)return;const label=$('#theme-label');const icon=toggle.querySelector('span');if(label)label.textContent=theme==='dark'?'Dark mode':'Light mode';if(icon)icon.textContent=theme==='dark'?'☾':'☼';toggle.setAttribute('aria-pressed',String(theme==='dark'));}
+function toggleTheme(){const theme=document.body.classList.contains('theme-dark')?'light':'dark';localStorage.setItem('campus-ledger-theme',theme);applyTheme(theme);}
+applyTheme(getStoredTheme());document.addEventListener('DOMContentLoaded',()=>{applyTheme(getStoredTheme());$('#theme-toggle')?.addEventListener('click',toggleTheme);});
 const api=async(url,options={})=>{const r=await fetch('/api'+url,{headers:{'Content-Type':'application/json'},...options});if(!r.ok){let d={};try{d=await r.json()}catch{}throw new Error(d.error||`Request failed (${r.status})`)}return r.status===204?null:r.json()};
 const initials=n=>(n||'?').split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase();const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const f2=n=>Number(n||0).toFixed(2);
 function toast(msg,error=false){const t=$('#toast');t.textContent=msg;t.className='toast'+(error?' error':'');t.hidden=false;clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.hidden=true,3400)}
