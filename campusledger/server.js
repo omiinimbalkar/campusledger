@@ -31,7 +31,7 @@ if (db.prepare('SELECT count(*) n FROM students').get().n === 0) {
   const sem = db.prepare('INSERT INTO semesters(student_id,semester_no,academic_year,sgpa,cgpa) VALUES(?,?,?,?,?)');
   for (const s of ids) {
     const scores=[8.1,8.45,7.82,8.62,8.91,9.05];let total=0;
-    scores.forEach((sgpa,i)=>{total+=sgpa;sem.run(s.student_id,i+1,i<2?'2022–23':i<4?'2023–24':'2024–25',sgpa,total/(i+1));});
+    scores.forEach((sgpa,i)=>{total+=sgpa;sem.run(s.student_id,i+1,i<2?'2024–25':i<4?'2025–26':'2026–27',sgpa,total/(i+1));});
   }
   const addSubject=db.prepare(`INSERT INTO subjects(semester_id,subject_code,subject_name,credits,theory_marks,internal_marks,external_marks,lab_marks)
     SELECT semester_id,?,?,?,?,?,?,? FROM semesters WHERE student_id=? AND semester_no=6`);
